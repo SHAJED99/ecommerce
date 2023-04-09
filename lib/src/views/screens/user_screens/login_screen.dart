@@ -16,35 +16,38 @@ class LoginScreen extends StatelessWidget {
       child: SafeArea(
         child: Scaffold(
           body: Center(
-            child: Container(
-              padding: const EdgeInsets.all(defaultPadding * 2),
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Form(
-                key: _form,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // logo
-                    Container(constraints: const BoxConstraints(maxHeight: defaultNavBarHeight * 2), child: SvgPicture.asset("lib/assets/svg/logo.svg")),
-                    const SizedBox(height: defaultPadding / 2),
-                    Text("Welcome Back", style: defaultCarouselTitle.copyWith(color: defaultBlackColor)),
-                    const SizedBox(height: defaultPadding / 2),
-                    const Text("Please enter your email address", style: defaultSubtitle1),
-                    const SizedBox(height: defaultPadding),
-                    CustomTextFormField(
-                      hintText: "Email Address",
-                      validator: (value) {
-                        if (kDebugMode) print(value);
-                        return "Invalid input";
-                      },
-                    ),
-                    const SizedBox(height: defaultPadding),
-                    CustomElevatedButton(
-                      onTap: () {
-                        if (kDebugMode) print(_form.currentState!.validate());
-                      },
-                    ),
-                  ],
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(defaultPadding * 2),
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Form(
+                  key: _form,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // logo
+                      Container(constraints: const BoxConstraints(maxHeight: defaultNavBarHeight * 2), child: SvgPicture.asset("lib/assets/svg/logo.svg")),
+                      const SizedBox(height: defaultPadding / 2),
+                      Text("Welcome Back", style: defaultCarouselTitle.copyWith(color: defaultBlackColor)),
+                      const SizedBox(height: defaultPadding / 2),
+                      const Text("Please enter your email address", style: defaultSubtitle1),
+                      const SizedBox(height: defaultPadding),
+                      CustomTextFormField(
+                        hintText: "Email Address",
+                        fillColor: Theme.of(context).canvasColor,
+                        validator: (value) {
+                          if (kDebugMode) print(value);
+                          return "Invalid input";
+                        },
+                      ),
+                      const SizedBox(height: defaultPadding),
+                      CustomElevatedButton(
+                        onTap: () {
+                          if (kDebugMode) print(_form.currentState!.validate());
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

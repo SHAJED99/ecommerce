@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatefulWidget {
+  final int? minLines;
+  final int maxLines;
+  final int? maxLength;
   final String hintText;
+  final String obscuringCharacter;
   final double? height;
   final bool enabled;
+  final bool readOnly;
+  final bool obscureText;
+  final bool autocorrect;
+  final bool autofocus;
+  final Widget? label;
+  final String? labelText;
+  final Widget? prefixIcon;
+  final Widget? prefix;
+  final Color? fillColor;
+  final FloatingLabelBehavior floatingLabelBehavior;
   final Iterable<String>? autofillHints;
   final EdgeInsetsGeometry? contentPadding;
   final TextStyle? style;
   final TextStyle? errorStyle;
+  final TextStyle? hintStyle;
   final InputBorder? enabledBorder;
   final InputBorder? focusedBorder;
   final InputBorder? errorBorder;
   final InputBorder? focusedErrorBorder;
   final InputBorder? disabledBorder;
   final BorderRadius? borderRadius;
+  final TextAlign textAlign;
+  final Color? cursorColor;
   final Function(String? value)? validator;
   final void Function(String? value)? onComplete;
   final void Function(String value)? onChanged;
   final void Function()? onTap;
+  final TextCapitalization textCapitalization;
   final TextEditingController? textEditingController;
+  final TextInputType keyboardType;
   const CustomTextFormField({
     Key? key,
     this.height = 48,
@@ -39,6 +58,25 @@ class CustomTextFormField extends StatefulWidget {
     this.enabled = true,
     this.style,
     this.errorStyle,
+    this.hintStyle,
+    this.obscureText = false,
+    this.cursorColor,
+    this.readOnly = false,
+    this.autocorrect = true,
+    this.autofocus = true,
+    this.keyboardType = TextInputType.text,
+    this.textCapitalization = TextCapitalization.none,
+    this.obscuringCharacter = "•",
+    this.textAlign = TextAlign.start,
+    this.minLines,
+    this.maxLines = 1,
+    this.maxLength,
+    this.label,
+    this.labelText,
+    this.floatingLabelBehavior = FloatingLabelBehavior.auto,
+    this.prefixIcon,
+    this.prefix,
+    this.fillColor,
   }) : super(key: key);
 
   @override
@@ -70,7 +108,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return SizedBox(
       height: widget.height,
       child: TextFormField(
+        textCapitalization: widget.textCapitalization,
+        keyboardType: widget.keyboardType,
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
+        maxLength: widget.maxLength,
+        textAlign: widget.textAlign,
+        autofocus: widget.autofocus,
+        autocorrect: widget.autocorrect,
         enabled: widget.enabled,
+        readOnly: widget.readOnly,
+        cursorColor: widget.cursorColor,
+        obscureText: widget.obscureText,
+        obscuringCharacter: widget.obscuringCharacter,
         controller: textEditingController,
         autofillHints: widget.autofillHints,
         style: widget.style ?? TextStyle(color: Theme.of(context).primaryColor),
@@ -102,9 +152,17 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           return "";
         },
         decoration: InputDecoration(
+          label: widget.label,
+          labelText: widget.labelText,
+          floatingLabelBehavior: widget.floatingLabelBehavior,
           hintText: hintText,
+          prefix: widget.prefix,
+          prefixIcon: widget.prefixIcon,
+          filled: widget.fillColor == null ? false : true,
+          fillColor: widget.fillColor,
+          hintStyle: widget.hintStyle ?? TextStyle(color: error ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor),
           errorStyle: widget.errorStyle ?? const TextStyle(height: 0),
-          contentPadding: widget.contentPadding,
+          contentPadding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           enabledBorder: widget.enabledBorder ??
               OutlineInputBorder(
                 borderRadius: borderRadius,
