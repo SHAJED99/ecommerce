@@ -5,6 +5,7 @@ import 'package:ecommerce/src/controllers/screen_controllers/wrapper_screen_cont
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/screens/splash_screen.dart';
 import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
+import 'package:ecommerce/src/views/screens/user_screens/otp_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         PointerDeviceKind.touch,
       }),
       // home: const SplashScreen(),
-      home: LoginScreen(),
+      // home: LoginScreen(),
+      home: OTPScreen(),
     );
   }
 }

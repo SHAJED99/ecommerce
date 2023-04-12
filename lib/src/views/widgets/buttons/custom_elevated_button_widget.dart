@@ -6,7 +6,7 @@ class CustomElevatedButton extends StatefulWidget {
   final BoxConstraints? constraints;
   final BorderRadius borderRadius;
   final EdgeInsetsGeometry? contentPadding;
-  final Function()? onTap;
+  final Future<bool?>? Function()? onTap;
   final Function(bool? isSuccess)? onDone;
   final Widget? child;
   final Widget? onRunningWidget;
@@ -46,13 +46,16 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   bool? result;
 
   Widget child() {
-    if (widget.onRunningWidget != null && isRunning == ButtonStatus.running) {
+    // if (widget.onRunningWidget != null && isRunning == ButtonStatus.running) {
+    if (isRunning == ButtonStatus.running) {
       return widget.onRunningWidget ??
           Expanded(child: Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: AspectRatio(aspectRatio: 1, child: CircularProgressIndicator(color: widget.iconColor))));
-    } else if (widget.onSuccessWidget != null && isRunning == ButtonStatus.success) {
+      // } else if (widget.onSuccessWidget != null && isRunning == ButtonStatus.success) {
+    } else if (isRunning == ButtonStatus.success) {
       return widget.onSuccessWidget ??
           Expanded(child: Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: AspectRatio(aspectRatio: 1, child: FittedBox(child: Icon(Icons.done, color: widget.iconColor)))));
-    } else if (widget.onErrorWidget != null && isRunning == ButtonStatus.error) {
+      // } else if (widget.onErrorWidget != null && isRunning == ButtonStatus.error) {
+    } else if (isRunning == ButtonStatus.error) {
       return widget.onErrorWidget ??
           Expanded(child: Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: AspectRatio(aspectRatio: 1, child: FittedBox(child: Icon(Icons.error, color: widget.iconColor)))));
     } else {

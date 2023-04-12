@@ -71,8 +71,20 @@ class DataController extends GetxController {
     return productList;
   }
 
-  Future<void> _errorHandler({required Function function}) async {
+  Future<bool> login(String email) async {
+    ErrorType res = await _errorHandler(function: () async {
+      await ApiServices.login(email);
+    });
+    if (res == ErrorType.done) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<ErrorType> _errorHandler({required Function function}) async {
     ErrorType errorType = await ErrorHandler.errorHandler(() async => function());
     if (errorType == ErrorType.invalidUser) logout();
+    return errorType;
   }
 }

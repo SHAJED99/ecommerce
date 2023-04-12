@@ -1,13 +1,17 @@
+import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart';
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
 import 'package:ecommerce/src/views/widgets/text_field_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final _form = GlobalKey<FormState>();
+  final TextEditingController _textEditingController = TextEditingController();
+  final DataController dataController = Get.put(DataController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +37,25 @@ class LoginScreen extends StatelessWidget {
                       const Text("Please enter your email address", style: defaultSubtitle1),
                       const SizedBox(height: defaultPadding),
                       CustomTextFormField(
+                        textEditingController: _textEditingController,
                         hintText: "Email Address",
-                        fillColor: Theme.of(context).canvasColor,
+                        fillColor: defaultWhiteColor,
+                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (kDebugMode) print(value);
-                          return "Invalid input";
+                          if (value == null || value.isEmpty) return "Invalid email address";
                         },
                       ),
                       const SizedBox(height: defaultPadding),
                       CustomElevatedButton(
-                        onTap: () {
-                          if (kDebugMode) print(_form.currentState!.validate());
+                        expanded: true,
+                        onTap: () async {
+                          if (_form.currentState!.validate()) {
+                            return await dataController.login(_textEditingController.text);
+                          }
+                          return null;
                         },
+                        // onDone: (isSuccess) => Get.to(() => Container()),
+                        child: const Text("Next", style: buttonText1),
                       ),
                     ],
                   ),

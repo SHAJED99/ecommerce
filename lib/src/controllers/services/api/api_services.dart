@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:ecommerce/src/controllers/services/api/http_call.dart';
+import 'package:ecommerce/src/controllers/services/handle_error/app_exceptions.dart';
 import 'package:ecommerce/src/models/pojo_classes/category_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
@@ -79,6 +81,24 @@ class ApiServices {
         });
       }
       return data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future login(String email) async {
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.login() for email: $email");
+    String httpLink = "/UserLogin/";
+
+    try {
+      http.Response res = await HttpCall.get(httpLink + email);
+
+      if (res.statusCode == 200) {
+        if (jsonDecode(res.body)['msg'] != "success") {
+          if (kDebugMode) print(jsonDecode(res.body));
+          throw Exception("Invalid request.");
+        }
+      }
     } catch (e) {
       rethrow;
     }
