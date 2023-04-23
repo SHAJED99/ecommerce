@@ -4,6 +4,7 @@ import 'package:ecommerce/src/controllers/services/local_data/local_data.dart';
 import 'package:ecommerce/src/models/pojo_classes/category_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class DataController extends GetxController {
@@ -15,6 +16,7 @@ class DataController extends GetxController {
   RxList<ProductCardModel> popularProductList = RxList<ProductCardModel>();
   RxList<ProductCardModel> specialProductList = RxList<ProductCardModel>();
   RxList<ProductCardModel> newProductList = RxList<ProductCardModel>();
+  RxBool isRequesting = false.obs;
 
   RxBool isError = false.obs;
 
@@ -82,9 +84,23 @@ class DataController extends GetxController {
     }
   }
 
+  Future<bool> otpVerification({required String email, required String otp}) async {
+    ErrorType res = await _errorHandler(function: () async {
+      token.value = await ApiServices.otpVerification(email, otp);
+    });
+    if (kDebugMode) print(token.value);
+    if (res == ErrorType.done) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<ErrorType> _errorHandler({required Function function}) async {
+    isRequesting.value = true;
     ErrorType errorType = await ErrorHandler.errorHandler(() async => function());
     if (errorType == ErrorType.invalidUser) logout();
+    isRequesting.value = false;
     return errorType;
   }
 }

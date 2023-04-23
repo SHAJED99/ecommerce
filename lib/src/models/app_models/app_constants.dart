@@ -31,8 +31,11 @@ const defaultSplashScreenWaitingTime = 3;
 const defaultOtpResend = 120;
 const defaultDuration = 150;
 
+const int otpLength = 4;
+
 // Box Size
 const double defaultPadding = 16;
+const double defaultMaxWidth = 400;
 const double defaultNavBarHeight = 16 * 3.5;
 const double defaultBoxHeight = 16 * 3;
 const double defaultCarouselHeight = 16 * 11;
@@ -63,11 +66,13 @@ const TextStyle defaultSubtitle2 = TextStyle(
   fontSize: 10,
   fontWeight: FontWeight.w700,
   color: defaultGreyColor,
+  height: 1,
 );
 const TextStyle defaultCarouselTitle = TextStyle(
   fontSize: 22,
   fontWeight: FontWeight.bold,
   color: defaultWhiteColor,
+  height: 1,
 );
 const TextStyle buttonText1 = TextStyle(
   fontSize: 16,

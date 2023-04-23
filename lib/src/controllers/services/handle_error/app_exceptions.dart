@@ -7,7 +7,7 @@ abstract class AppExceptions {
   final String message;
 
   AppExceptions({this.prefix = "", this.message = ""}) {
-    showMessage(
+    showSnackBar(
       title: prefix,
       message: message,
       icon: const Icon(Icons.error, color: defaultErrorColor),

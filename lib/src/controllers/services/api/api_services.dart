@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:ecommerce/src/controllers/services/api/http_call.dart';
-import 'package:ecommerce/src/controllers/services/handle_error/app_exceptions.dart';
 import 'package:ecommerce/src/models/pojo_classes/category_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
@@ -93,12 +92,22 @@ class ApiServices {
     try {
       http.Response res = await HttpCall.get(httpLink + email);
 
-      if (res.statusCode == 200) {
-        if (jsonDecode(res.body)['msg'] != "success") {
-          if (kDebugMode) print(jsonDecode(res.body));
-          throw Exception("Invalid request.");
-        }
-      }
+      if (res.statusCode == 200 && jsonDecode(res.body)['msg'] == "success") return;
+      throw Exception("Invalid request.");
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<String> otpVerification(String email, String otp) async {
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.login() for email: $email");
+    String httpLink = "/VerifyLogin/";
+
+    try {
+      http.Response res = await HttpCall.get("$httpLink$email/$otp");
+      var metaData = jsonDecode(res.body);
+      if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) return metaData['data'];
+      throw Exception("Invalid request.");
     } catch (e) {
       rethrow;
     }

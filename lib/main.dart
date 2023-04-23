@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       }),
       // home: const SplashScreen(),
       // home: LoginScreen(),
-      home: OTPScreen(),
+      home: const OTPScreen(email: "kajiraj.raj@gmail.com"),
     );
   }
 }

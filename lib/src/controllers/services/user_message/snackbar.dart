@@ -2,7 +2,7 @@ import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showMessage({required String title, required String message, Widget? icon}) {
+void showSnackBar({required String title, required String message, Widget? icon}) {
   Get.snackbar(
     title,
     message,
