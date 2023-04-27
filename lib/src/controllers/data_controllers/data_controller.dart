@@ -20,8 +20,14 @@ class DataController extends GetxController {
 
   RxBool isError = false.obs;
 
+  DataController();
+
   Future<void> initApp() async {
     token.value = await _localData.initData();
+    token.listen((value) {
+      if (kDebugMode) print("DataController.tokenListener: Token: $value");
+      _localData.setToken(value);
+    });
     loadData();
   }
 
@@ -65,14 +71,6 @@ class DataController extends GetxController {
     _localData.deleteUserData();
   }
 
-  Future<List<ProductCardModel>> getProductListByCategory(String id) async {
-    List<ProductCardModel> productList = [];
-    await _errorHandler(function: () async {
-      productList = await ApiServices.listProductByCategory(id);
-    });
-    return productList;
-  }
-
   Future<bool> login(String email) async {
     ErrorType res = await _errorHandler(function: () async {
       await ApiServices.login(email);
@@ -88,12 +86,29 @@ class DataController extends GetxController {
     ErrorType res = await _errorHandler(function: () async {
       token.value = await ApiServices.otpVerification(email, otp);
     });
-    if (kDebugMode) print(token.value);
     if (res == ErrorType.done) {
       return true;
     } else {
       return false;
     }
+  }
+
+  // get Product Details By Id
+  Future<ProductDetails> getProductDetailsById(String productId) async {
+    ProductDetails productDetails = ProductDetails();
+    await _errorHandler(function: () async {
+      productDetails = await ApiServices.getProductDetailsById(productId);
+    });
+    return productDetails;
+  }
+
+  // get Product List By Category
+  Future<List<ProductCardModel>> getProductListByCategory(String id) async {
+    List<ProductCardModel> productList = [];
+    await _errorHandler(function: () async {
+      productList = await ApiServices.listProductByCategory(id);
+    });
+    return productList;
   }
 
   Future<ErrorType> _errorHandler({required Function function}) async {

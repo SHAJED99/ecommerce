@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 class MainScreenWrapperController extends GetxController {
   final RxList<ScreenState> _previousPages = RxList<ScreenState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late Rx<ScreenState> currentPage = ScreenState(pageIndex: PageEnum.home, topBarIndex: CustomTopAppBar(), page: HomeScreen()).obs;
 
   List<CustomPage> pages = [

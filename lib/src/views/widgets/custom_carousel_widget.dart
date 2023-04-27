@@ -1,9 +1,8 @@
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
-import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class CustomCarousel extends StatefulWidget {
+class CustomCarousel<T> extends StatefulWidget {
   const CustomCarousel({
     super.key,
     required this.productList,
@@ -12,19 +11,21 @@ class CustomCarousel extends StatefulWidget {
     this.margin = const EdgeInsets.only(left: defaultPadding / 4, right: defaultPadding / 4, bottom: defaultPadding / 4),
     this.clipBehavior = Clip.antiAlias,
     this.dotBorder,
+    this.height = defaultCarouselHeight,
   });
-  final List<ProductListSliderModel> productList;
-  final Widget Function(MapEntry<int, ProductListSliderModel> element) onBuild;
+  final List<T> productList;
+  final Widget Function(MapEntry<int, T> element) onBuild;
   final Decoration? decoration;
   final EdgeInsetsGeometry? margin;
   final Clip clipBehavior;
   final BoxBorder? dotBorder;
+  final double? height;
 
   @override
-  State<CustomCarousel> createState() => _CustomCarouselState();
+  State<CustomCarousel<T>> createState() => _CustomCarouselState<T>();
 }
 
-class _CustomCarouselState extends State<CustomCarousel> {
+class _CustomCarouselState<T> extends State<CustomCarousel<T>> {
   final CarouselController carouselController = CarouselController();
 
   int _index = 0;
@@ -43,7 +44,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
                 carouselController: carouselController,
                 options: CarouselOptions(
                   initialPage: _index,
-                  height: defaultCarouselHeight,
+                  height: widget.height,
                   viewportFraction: 1,
                   autoPlay: true,
                   autoPlayAnimationDuration: const Duration(milliseconds: defaultDuration * 3),
@@ -54,6 +55,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
             ],
           ),
         ),
+        // Dots
         Wrap(
           children: widget.productList.asMap().entries.map((e) {
             return Container(

@@ -2,6 +2,10 @@ import 'package:ecommerce/src/controllers/screen_controllers/wrapper_screen_cont
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/models/pojo_classes/page_index.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
+import 'package:ecommerce/src/views/screens/main_screen/cart_screen.dart';
+import 'package:ecommerce/src/views/widgets/custom_image_field.dart';
+import 'package:ecommerce/src/views/widgets/custom_top_app_bar.dart';
+import 'package:ecommerce/src/views/widgets/react_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,13 +35,9 @@ class ProductCard extends StatelessWidget {
                 padding: const EdgeInsets.all(defaultPadding / 2),
                 color: Theme.of(context).primaryColorLight,
                 child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.network(
-                      productModel.image ?? "",
-                      errorBuilder: (context, error, stackTrace) => FittedBox(
-                        child: Icon(Icons.no_photography, color: Theme.of(context).cardColor),
-                      ),
-                    )),
+                  aspectRatio: 1,
+                  child: CustomNetworkImage(image: productModel.image ?? ""),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding / 2, vertical: defaultPadding / 4),
@@ -75,11 +75,7 @@ class ProductCard extends StatelessWidget {
                         ),
 
                         // React Button
-                        Container(
-                            padding: const EdgeInsets.all(defaultPadding / 16),
-                            decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(defaultPadding / 4)),
-                            height: defaultSubtitle2.fontSize! + 4,
-                            child: FittedBox(child: Icon(Icons.favorite_border, color: Theme.of(context).cardColor)))
+                        const CustomReactButton(),
                       ],
                     ),
                     const SizedBox(height: defaultPadding / 2),
@@ -93,7 +89,16 @@ class ProductCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
-                  mainScreenWrapperController.changeIndex(index: PageEnum.cart);
+                  mainScreenWrapperController.changeIndex(
+                      index: PageEnum.cart,
+                      topNavBar: CustomTopAppBar2(
+                        title: "Product Details",
+                        color: defaultGreyColor.withOpacity(0.2),
+                        boxShadow: const [],
+                      ),
+                      page: CartScreen(
+                        productCardModel: productModel,
+                      ));
                 },
                 child: Container(),
               ),

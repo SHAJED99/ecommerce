@@ -45,9 +45,9 @@ class LoginScreen extends StatelessWidget {
                           hintText: "Email Address",
                           fillColor: defaultWhiteColor,
                           keyboardType: TextInputType.emailAddress,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) return "Invalid email address";
-                          // },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return "Invalid email address";
+                          },
                         ),
                         const SizedBox(height: defaultPadding),
                         CustomElevatedButton(

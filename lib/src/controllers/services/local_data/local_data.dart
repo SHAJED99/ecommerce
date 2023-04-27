@@ -13,6 +13,10 @@ class LocalData extends GetxController {
     return token;
   }
 
+  setToken(String token) {
+    _sharedPreferences?.setString("token", token);
+  }
+
   deleteUserData() {
     if (kDebugMode) print("LocalData: Local user data has been reset.");
     _sharedPreferences?.setString("token", "");

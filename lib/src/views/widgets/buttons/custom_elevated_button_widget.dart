@@ -8,7 +8,9 @@ class CustomElevatedButton extends StatefulWidget {
   final double? iconHeight;
   final BoxConstraints? constraints;
   final BorderRadius borderRadius;
+  final BoxBorder? border;
   final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? margin;
   final Future<bool?>? Function()? onTap;
   final Function(bool? isSuccess)? onDone;
   final Widget? child;
@@ -41,6 +43,8 @@ class CustomElevatedButton extends StatefulWidget {
     this.iconColor = Colors.white,
     this.enable = true,
     this.duration = const Duration(milliseconds: 150),
+    this.margin,
+    this.border,
   });
 
   @override
@@ -73,8 +77,9 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
     return AnimatedSize(
       duration: widget.duration,
       child: Container(
+        margin: widget.margin,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(borderRadius: widget.borderRadius),
+        decoration: BoxDecoration(borderRadius: widget.borderRadius, border: widget.border),
         child: Material(
           color: widget.backgroundColor ?? Theme.of(context).primaryColor,
           child: InkWell(

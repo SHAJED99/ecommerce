@@ -93,21 +93,37 @@ class ApiServices {
       http.Response res = await HttpCall.get(httpLink + email);
 
       if (res.statusCode == 200 && jsonDecode(res.body)['msg'] == "success") return;
-      throw Exception("Invalid request.");
+      throw res.statusCode;
     } catch (e) {
       rethrow;
     }
   }
 
   static Future<String> otpVerification(String email, String otp) async {
-    if (kDebugMode) print("ApiServices: Requesting ApiServices.login() for email: $email");
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.otpVerification() for $email/$otp");
     String httpLink = "/VerifyLogin/";
 
     try {
       http.Response res = await HttpCall.get("$httpLink$email/$otp");
       var metaData = jsonDecode(res.body);
       if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) return metaData['data'];
-      throw Exception("Invalid request.");
+      throw res.statusCode;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<ProductDetails> getProductDetailsById(String id) async {
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.login() for id: $id");
+    String httpLink = "/ProductDetailsById/";
+
+    try {
+      http.Response res = await HttpCall.get("$httpLink$id");
+      var metaData = jsonDecode(res.body);
+      if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) {
+        return ProductDetails.fromJson(metaData['data'][0]);
+      }
+      throw res.statusCode;
     } catch (e) {
       rethrow;
     }

@@ -7,7 +7,7 @@ class CustomMessageBarNoItemHere extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "No item here",
+      "Nothing to show here",
       style: defaultSubtitle1.copyWith(height: 1, color: defaultBlackColor),
     );
   }

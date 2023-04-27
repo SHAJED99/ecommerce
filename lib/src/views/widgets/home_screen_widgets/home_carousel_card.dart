@@ -1,6 +1,7 @@
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
+import 'package:ecommerce/src/views/widgets/custom_image_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -28,13 +29,7 @@ class HomeCarouselCard extends StatelessWidget {
                 duration: const Duration(milliseconds: defaultDuration),
                 child: Container(
                   constraints: BoxConstraints(maxWidth: width / 2),
-                  child: Image.network(
-                    productListSliderModel.image,
-                    errorBuilder: (context, error, stackTrace) => SizedBox(
-                      width: defaultBoxHeight,
-                      child: FittedBox(child: Icon(Icons.production_quantity_limits, color: Theme.of(context).cardColor)),
-                    ),
-                  ),
+                  child: CustomNetworkImage(image: productListSliderModel.image, width: defaultBoxHeight),
                 ),
               ),
               const SizedBox(width: defaultPadding),

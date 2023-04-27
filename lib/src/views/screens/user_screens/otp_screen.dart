@@ -140,8 +140,8 @@ class _OTPScreenState extends State<OTPScreen> {
                         onTap: () async {
                           if (!otpWaitDone || isSandingOTP) return null;
                           isSandingOTP = true;
-                          // bool res = await _dataController.login(widget.email);
-                          bool res = false;
+                          bool res = await _dataController.login(widget.email);
+                          // bool res = false;
                           await Future.delayed(const Duration(seconds: 3));
                           isSandingOTP = false;
                           if (mounted && !res) setState(() => otpWaitDone = false);
@@ -154,25 +154,54 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       const SizedBox(height: defaultPadding / 4),
                       // Change Email
-                      Builder(builder: (context) {
-                        return CustomElevatedButton(
-                          backgroundColor: Colors.transparent,
-                          height: 24,
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const PopupDialog();
-                              },
-                            );
-                            return null;
-                          },
-                          child: const Text(
-                            "Change email address?",
-                            style: defaultSubtitle1,
-                          ),
-                        );
-                      })
+                      CustomElevatedButton(
+                        backgroundColor: Colors.transparent,
+                        height: 24,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const PopupDialog();
+                            },
+                          );
+                          return null;
+                        },
+                        child: const Text(
+                          "Change email address?",
+                          style: defaultSubtitle1,
+                        ),
+                      ),
+                      CustomElevatedButton(
+                        iconColor: defaultGreyColor,
+                        backgroundColor: Colors.transparent,
+                        height: 24,
+                        onTap: () async {
+                          bool res = await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: const Text('Do you really want to change email address?'),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () => Get.back(result: false),
+                                  //return false when click on "NO"
+                                  child: const Text('No'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () => Get.back(result: true),
+                                  //return true when click on "Yes"
+                                  child: const Text('Yes'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (res) Get.off(() => LoginScreen());
+                          return null;
+                        },
+                        child: const Text(
+                          "Change email address?",
+                          style: defaultSubtitle1,
+                        ),
+                      )
                     ],
                   ),
                 ),

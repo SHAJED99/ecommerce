@@ -1,4 +1,5 @@
 import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart';
+import 'package:ecommerce/src/controllers/screen_controllers/wrapped_screen_controllers/cart_screen_controller.dart';
 import 'package:ecommerce/src/controllers/screen_controllers/wrapped_screen_controllers/categories_screen_controller.dart';
 import 'package:ecommerce/src/controllers/screen_controllers/wrapped_screen_controllers/home_screen_controller.dart';
 import 'package:ecommerce/src/controllers/screen_controllers/wrapper_screen_controller.dart';
@@ -32,9 +33,9 @@ class MyApp extends StatelessWidget {
         PointerDeviceKind.mouse,
         PointerDeviceKind.touch,
       }),
-      // home: const SplashScreen(),
+      home: const SplashScreen(),
       // home: LoginScreen(),
-      home: const OTPScreen(email: "kajiraj.raj@gmail.com"),
+      // home: const OTPScreen(email: "kajiraj.raj@gmail.com"),
     );
   }
 }
@@ -45,6 +46,7 @@ class InitializedBinding extends Bindings {
     Get.put(DataController());
     Get.put(HomeScreenController());
     Get.put(CategoriesScreenController());
+    Get.put(CartScreenController());
     Get.put(MainScreenWrapperController());
   }
 }

@@ -12,6 +12,7 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(defaultNavBarHeight);
 
   final DataController dataController = Get.find();
+  final MainScreenWrapperController mainScreenWrapperController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
 
             // Button
             NavBarRoundedButton(
+              onTap: () => mainScreenWrapperController.scaffoldKey.currentState?.openEndDrawer(),
               isActive: dataController.token.isNotEmpty,
               icon: Icons.person_outline_rounded,
             ),
@@ -81,7 +83,15 @@ class NavBarRoundedButton extends StatelessWidget {
 class CustomTopAppBar2 extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool fillBackground;
-  CustomTopAppBar2({super.key, required this.title, this.fillBackground = true});
+  final Color? color;
+  final List<BoxShadow>? boxShadow;
+  CustomTopAppBar2({
+    super.key,
+    required this.title,
+    this.fillBackground = true,
+    this.color,
+    this.boxShadow,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(defaultNavBarHeight);
@@ -94,8 +104,8 @@ class CustomTopAppBar2 extends StatelessWidget implements PreferredSizeWidget {
       height: defaultNavBarHeight,
       decoration: fillBackground
           ? BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              boxShadow: defaultBoxShadowDown,
+              color: color ?? Theme.of(context).canvasColor,
+              boxShadow: boxShadow ?? defaultBoxShadowDown,
             )
           : null,
       child: Row(
