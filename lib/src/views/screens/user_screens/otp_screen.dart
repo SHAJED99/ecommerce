@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart';
 import 'package:ecommerce/src/controllers/services/functions/countdown.dart';
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
@@ -8,7 +7,6 @@ import 'package:ecommerce/src/views/screens/wrapper_screen.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_text_button.dart';
 import 'package:ecommerce/src/views/widgets/custom_card.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -133,6 +131,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 ],
                               ),
                       ),
+                      // Resend button
                       CustomElevatedButton(
                         iconColor: defaultGreyColor,
                         backgroundColor: Colors.transparent,
@@ -145,7 +144,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           bool res = false;
                           await Future.delayed(const Duration(seconds: 3));
                           isSandingOTP = false;
-                          if (mounted) setState(() => otpWaitDone = false);
+                          if (mounted && !res) setState(() => otpWaitDone = false);
                           return res;
                         },
                         child: const Text(
@@ -154,6 +153,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         ),
                       ),
                       const SizedBox(height: defaultPadding / 4),
+                      // Change Email
                       Builder(builder: (context) {
                         return CustomElevatedButton(
                           backgroundColor: Colors.transparent,
