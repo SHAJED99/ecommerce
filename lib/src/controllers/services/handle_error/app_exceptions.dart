@@ -37,5 +37,5 @@ class ServiceUnavailable extends AppExceptions {
 
 // 5
 class InvalidUser extends AppExceptions {
-  InvalidUser({String? message}) : super(prefix: "Error", message: "User timeout. Please log in again. ${message ?? ""}");
+  InvalidUser({String? message}) : super(prefix: "Error", message: "Invalid user. Please login. ${message ?? ""}");
 }

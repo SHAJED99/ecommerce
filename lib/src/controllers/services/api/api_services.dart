@@ -5,7 +5,9 @@ import 'package:ecommerce/src/controllers/services/api/http_call.dart';
 import 'package:ecommerce/src/models/pojo_classes/category_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
+import 'package:ecommerce/src/models/pojo_classes/user_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
@@ -102,7 +104,6 @@ class ApiServices {
   static Future<String> otpVerification(String email, String otp) async {
     if (kDebugMode) print("ApiServices: Requesting ApiServices.otpVerification() for $email/$otp");
     String httpLink = "/VerifyLogin/";
-
     try {
       http.Response res = await HttpCall.get("$httpLink$email/$otp");
       var metaData = jsonDecode(res.body);
@@ -114,7 +115,7 @@ class ApiServices {
   }
 
   static Future<ProductDetails> getProductDetailsById(String id) async {
-    if (kDebugMode) print("ApiServices: Requesting ApiServices.login() for id: $id");
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.getProductDetailsById() for id: $id");
     String httpLink = "/ProductDetailsById/";
 
     try {
@@ -122,6 +123,22 @@ class ApiServices {
       var metaData = jsonDecode(res.body);
       if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) {
         return ProductDetails.fromJson(metaData['data'][0]);
+      }
+      throw res.statusCode;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<UserModel> userInformation(String token) async {
+    if (kDebugMode) print("ApiServices: Requesting ApiServices.userInformation");
+    String httpLink = "/ReadProfile";
+
+    try {
+      http.Response res = await HttpCall.get(httpLink);
+      var metaData = jsonDecode(res.body);
+      if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) {
+        return UserModel.fromJson(metaData['data'][0]);
       }
       throw res.statusCode;
     } catch (e) {

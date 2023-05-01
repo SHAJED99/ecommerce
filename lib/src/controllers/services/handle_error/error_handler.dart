@@ -6,29 +6,29 @@ import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 
 class ErrorHandler {
   // Handle Error
-  static Future<ErrorType> errorHandler(Function function) async {
+  static Future<ErrorType> errorHandler({bool showError = true, required Function function}) async {
     try {
       await function();
       return ErrorType.done;
     } on SocketException {
       if (kDebugMode) print("ErrorHandler: SocketException");
-      InternetException();
+      if (showError) InternetException();
       return ErrorType.internetException;
     } on TimeoutException {
       if (kDebugMode) print("ErrorHandler: TimeoutException");
-      RequestTimeOut();
+      if (showError) RequestTimeOut();
       return ErrorType.requestTimeOut;
     } on UnauthorizedException {
       if (kDebugMode) print("ErrorHandler: UnauthorizedException");
-      InvalidUser();
+      if (showError) InvalidUser();
       return ErrorType.invalidUser;
     } on ServiceUnavailable {
       if (kDebugMode) print("ErrorHandler: ServiceUnavailableException");
-      ServiceUnavailable();
+      if (showError) ServiceUnavailable();
       return ErrorType.serviceUnavailable;
     } catch (e) {
       if (kDebugMode) print("ErrorHandler: $e");
-      InternalError(message: "Code: $e");
+      if (showError) InternalError(message: "Code: $e");
       return ErrorType.unknownError;
     }
   }

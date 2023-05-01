@@ -22,10 +22,6 @@ class MainScreenWrapperController extends GetxController {
     CustomPage(name: "Wish", iconData: Icons.card_giftcard, page: WishScreen()),
   ];
 
-  MainScreenWrapperController() {
-    if (kDebugMode) print("MainScreenWrapperController initialized");
-  }
-
   changeIndex({required PageEnum index, PreferredSizeWidget? topNavBar, Widget? page}) {
     // Add previous page list
     _previousPages.add(currentPage.value);

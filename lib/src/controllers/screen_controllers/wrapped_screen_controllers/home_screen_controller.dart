@@ -4,6 +4,10 @@ import 'package:get/get.dart';
 class HomeScreenController extends GetxController {
   final DataController _dataController = Get.find();
 
+  HomeScreenController() {
+    loadData();
+  }
+
   Future<void> loadData() async {
     await _dataController.loadData();
   }

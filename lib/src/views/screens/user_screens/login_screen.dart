@@ -9,8 +9,11 @@ import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
+
   final _form = GlobalKey<FormState>();
+
   final TextEditingController _textEditingController = TextEditingController();
+
   final DataController dataController = Get.put(DataController());
 
   @override

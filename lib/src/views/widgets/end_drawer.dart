@@ -21,9 +21,14 @@ class EndDrawer extends StatelessWidget {
           CustomElevatedButton(
             margin: const EdgeInsets.symmetric(vertical: defaultPadding / 2),
             expanded: true,
-            child: Text(
-              dataController.token.isEmpty ? "Login" : "Logout",
-              style: buttonText1,
+            onTap: () {
+              if (dataController.token.isNotEmpty) dataController.logout();
+            },
+            child: Obx(
+              () => Text(
+                dataController.token.isEmpty ? "Login" : "Logout",
+                style: buttonText1,
+              ),
             ),
           ),
         ],

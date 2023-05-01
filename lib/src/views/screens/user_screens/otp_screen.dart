@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart';
+import 'package:ecommerce/src/controllers/screen_controllers/wrapper_screen_controller.dart';
 import 'package:ecommerce/src/controllers/services/functions/countdown.dart';
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
@@ -28,6 +29,12 @@ class _OTPScreenState extends State<OTPScreen> {
   String inputValue = "";
   bool otpWaitDone = false;
   bool isSandingOTP = false;
+
+  @override
+  void dispose() {
+    _form.currentState?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +105,11 @@ class _OTPScreenState extends State<OTPScreen> {
                           }
                         },
                         onDone: (isSuccess) {
-                          if (isSuccess ?? false) Get.off(() => MainScreenWrapper());
+                          if (isSuccess ?? false) {
+                            Get.delete<MainScreenWrapperController>();
+                            _dataController.loadData();
+                            Get.off(() => MainScreenWrapper());
+                          }
                         },
                         child: const Text("Next", style: buttonText1),
                       ),
@@ -141,11 +152,11 @@ class _OTPScreenState extends State<OTPScreen> {
                           if (!otpWaitDone || isSandingOTP) return null;
                           isSandingOTP = true;
                           bool res = await _dataController.login(widget.email);
-                          // bool res = false;
-                          await Future.delayed(const Duration(seconds: 3));
                           isSandingOTP = false;
-                          if (mounted && !res) setState(() => otpWaitDone = false);
                           return res;
+                        },
+                        onDone: (isSuccess) {
+                          if (mounted && (isSuccess ?? true)) setState(() => otpWaitDone = false);
                         },
                         child: const Text(
                           "Resend Code",
@@ -155,45 +166,29 @@ class _OTPScreenState extends State<OTPScreen> {
                       const SizedBox(height: defaultPadding / 4),
                       // Change Email
                       CustomElevatedButton(
-                        backgroundColor: Colors.transparent,
-                        height: 24,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const PopupDialog();
-                            },
-                          );
-                          return null;
-                        },
-                        child: const Text(
-                          "Change email address?",
-                          style: defaultSubtitle1,
-                        ),
-                      ),
-                      CustomElevatedButton(
                         iconColor: defaultGreyColor,
                         backgroundColor: Colors.transparent,
                         height: 24,
                         onTap: () async {
-                          bool res = await showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              content: const Text('Do you really want to change email address?'),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () => Get.back(result: false),
-                                  //return false when click on "NO"
-                                  child: const Text('No'),
+                          bool res = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: const Text('Do you really want to change email address?'),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () => Get.back(result: false),
+                                      //return false when click on "NO"
+                                      child: const Text('No'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () => Get.back(result: true),
+                                      //return true when click on "Yes"
+                                      child: const Text('Yes'),
+                                    ),
+                                  ],
                                 ),
-                                ElevatedButton(
-                                  onPressed: () => Get.back(result: true),
-                                  //return true when click on "Yes"
-                                  child: const Text('Yes'),
-                                ),
-                              ],
-                            ),
-                          );
+                              ) ??
+                              false;
                           if (res) Get.off(() => LoginScreen());
                           return null;
                         },
@@ -206,58 +201,6 @@ class _OTPScreenState extends State<OTPScreen> {
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PopupDialog extends StatelessWidget {
-  const PopupDialog({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: defaultMaxWidth),
-        padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-        child: Center(
-          child: CustomCard(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Do you really want to change email address?",
-                  style: buttonText1.copyWith(color: defaultBlackColor),
-                ),
-                const SizedBox(height: defaultPadding),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomTextButton(
-                      contentPadding: const EdgeInsets.symmetric(vertical: defaultPadding / 2, horizontal: defaultPadding),
-                      onTap: () => Get.offAll(() => LoginScreen()),
-                      child: Text(
-                        "Yes",
-                        style: buttonText1.copyWith(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    const SizedBox(width: defaultPadding),
-                    CustomTextButton(
-                      contentPadding: const EdgeInsets.symmetric(vertical: defaultPadding / 2, horizontal: defaultPadding),
-                      onTap: () => Get.back(),
-                      child: Text(
-                        "No",
-                        style: buttonText1.copyWith(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ],
-                )
-              ],
             ),
           ),
         ),

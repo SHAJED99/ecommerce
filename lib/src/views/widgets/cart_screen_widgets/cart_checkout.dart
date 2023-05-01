@@ -3,8 +3,18 @@ import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widge
 import 'package:flutter/material.dart';
 
 class CartCheckout extends StatelessWidget {
+  final Future<bool?>? Function()? onTap;
+  final dynamic Function(bool? isSuccess)? onDone;
+  final String heading;
+  final String price;
+  final String buttonText;
   const CartCheckout({
     super.key,
+    this.onTap,
+    this.onDone,
+    required this.heading,
+    required this.price,
+    required this.buttonText,
   });
 
   @override
@@ -25,14 +35,16 @@ class CartCheckout extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Total Price:", style: defaultSubtitle2.copyWith(color: defaultBlackColor)),
+                  Text(heading, style: defaultSubtitle2.copyWith(color: defaultBlackColor)),
                   const SizedBox(height: defaultPadding / 2),
-                  Text("\$${1000}", style: buttonText1.copyWith(color: Theme.of(context).primaryColor)),
+                  Text("\$$price", style: buttonText1.copyWith(color: Theme.of(context).primaryColor)),
                 ],
               ),
-              const CustomElevatedButton(
+              CustomElevatedButton(
+                onDone: onDone,
+                onTap: onTap,
                 child: Text(
-                  "Checkout",
+                  buttonText,
                   style: buttonText1,
                 ),
               ),

@@ -19,8 +19,8 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: defaultPadding / 2, vertical: defaultPadding / 2),
       color: Theme.of(context).canvasColor,
-      child: GetBuilder<DataController>(builder: (_) {
-        return Row(
+      child: Obx(
+        () => Row(
           children: [
             SvgPicture.asset("lib/assets/svg/logo_nav.svg"),
             const Spacer(),
@@ -38,8 +38,8 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: Icons.edit_notifications_outlined,
             ),
           ],
-        );
-      }),
+        ),
+      ),
     );
   }
 }

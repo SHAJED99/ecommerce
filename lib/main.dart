@@ -47,6 +47,5 @@ class InitializedBinding extends Bindings {
     Get.put(HomeScreenController());
     Get.put(CategoriesScreenController());
     Get.put(CartScreenController());
-    Get.put(MainScreenWrapperController());
   }
 }
