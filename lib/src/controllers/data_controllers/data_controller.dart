@@ -23,24 +23,30 @@ class DataController extends GetxController {
   RxBool isRequesting = false.obs;
   RxBool isError = false.obs;
 
+  //! Helper function //////////////////////////////////////////////////////////
   // Error handler
   // return ReturnType class where value is T and isValid = true if ErrorType.done
   Future<ReturnType<T>> _errorHandler<T>({bool showError = true, required Function function}) async {
     isRequesting.value = true;
     dynamic value;
     ErrorType errorType = await ErrorHandler.errorHandler(function: () async => value = await function(), showError: showError);
-    if (errorType == ErrorType.invalidUser) _loadLoginScreen();
+    if (errorType == ErrorType.invalidUser) _loadLoginScreen(goLoginPage: showError);
     isRequesting.value = false;
     return ReturnType<T>(value: value, isValid: errorType == ErrorType.done ? true : false);
   }
 
+  // run every time when the token value is changed
+  void tokenListener() => token.listen((value) async {
+        if (kDebugMode) print("DataController.tokenListener: Token: $value");
+        if (token.isNotEmpty) user.value = await _tokenValidation(showError: false);
+        _localData.setToken(value);
+      });
+  //! //////////////////////////////////////////////////////////////////////////
+
   //* 0 App initializing function (On startup initialization) //////////////////
   Future<void> initApp() async {
     token.value = await _localData.initData();
-    token.listen((value) {
-      if (kDebugMode) print("DataController.tokenListener: Token: $value");
-      _localData.setToken(value);
-    });
+    tokenListener();
   }
 
   Future<void> loadData() async {
@@ -59,18 +65,21 @@ class DataController extends GetxController {
   Future<bool> login(String email) async => await _errorHandler(function: () async => await ApiServices.login(email)).then((value) => value.isValid);
 
   // return true request successful
-  Future<bool> otpVerification({required String email, required String otp}) async => await _errorHandler(function: () async => token.value = await ApiServices.otpVerification(email, otp)).then((value) => value.isValid);
+  Future<bool> otpVerification({required String email, required String otp}) async => await _errorHandler(showError: false, function: () async => token.value = await ApiServices.otpVerification(email, otp)).then((value) => value.isValid);
 
   // return user model
-  Future<UserModel> tokenValidation() async => await _errorHandler<UserModel>(function: () async => await ApiServices.userInformation(token.value), showError: false).then((value) => value.value);
+  Future<UserModel> _tokenValidation({bool showError = true}) async => await _errorHandler<UserModel>(showError: showError, function: () async => await ApiServices.userInformation(token.value)).then((value) => value.value);
 
   // Logout
-  void logout() => token.value = "";
+  void logout() {
+    token.value = "";
+    user.value = null;
+  }
 
   // auto logout and shift to the login page when error with 401 statue code
-  void _loadLoginScreen() {
+  void _loadLoginScreen({bool goLoginPage = true}) {
     logout();
-    Get.to(() => LoginScreen());
+    if (goLoginPage) Get.to(() => LoginScreen());
   }
   //////////////////////////////////////////////////////////////////////////////
 
@@ -99,10 +108,8 @@ class DataController extends GetxController {
 
   // add to cart
   Future<bool> addToCart({required int productId, required String color, required String size}) async {
-    if (token.isEmpty) {
-      InvalidUser();
-      _loadLoginScreen();
-    }
+    if (token.isEmpty) _loadLoginScreen();
+
     return true;
   }
 }

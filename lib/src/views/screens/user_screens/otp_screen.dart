@@ -6,16 +6,16 @@ import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
 import 'package:ecommerce/src/views/screens/wrapper_screen.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
-import 'package:ecommerce/src/views/widgets/buttons/custom_text_button.dart';
-import 'package:ecommerce/src/views/widgets/custom_card.dart';
-
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key, required this.email});
+  const OTPScreen({
+    super.key,
+    required this.email,
+  });
   final String email;
 
   @override
@@ -106,9 +106,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         },
                         onDone: (isSuccess) {
                           if (isSuccess ?? false) {
-                            Get.delete<MainScreenWrapperController>();
-                            _dataController.loadData();
-                            Get.off(() => MainScreenWrapper());
+                            Get.until((route) => route.isFirst);
                           }
                         },
                         child: const Text("Next", style: buttonText1),

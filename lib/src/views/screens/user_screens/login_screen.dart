@@ -1,4 +1,5 @@
 import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart';
+import 'package:ecommerce/src/controllers/services/functions/email_verification.dart';
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/screens/user_screens/otp_screen.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
@@ -14,7 +15,7 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController _textEditingController = TextEditingController();
 
-  final DataController dataController = Get.put(DataController());
+  final DataController dataController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +50,12 @@ class LoginScreen extends StatelessWidget {
                           fillColor: defaultWhiteColor,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
-                            if (value == null || value.isEmpty) return "Invalid email address";
+                            if (value == null || value.isEmpty || !emailVerification(value)) return "Invalid email address";
                           },
                         ),
                         const SizedBox(height: defaultPadding),
+
+                        // Submit
                         CustomElevatedButton(
                           expanded: true,
                           onTap: () async {
@@ -63,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                           },
                           onDone: (isSuccess) {
                             if (isSuccess ?? false) {
-                              Get.to(() => OTPScreen(email: _textEditingController.text));
+                              Get.off(() => OTPScreen(email: _textEditingController.text));
                             }
                           },
                           child: const Text("Next", style: buttonText1),
