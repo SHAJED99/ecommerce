@@ -132,7 +132,6 @@ class ApiServices {
   static Future<UserModel> userInformation(String token) async {
     if (kDebugMode) print("ApiServices: Requesting ApiServices.userInformation");
     String httpLink = "/ReadProfile";
-
     try {
       http.Response res = await HttpCall.get(httpLink, token: token);
       var metaData = jsonDecode(res.body);

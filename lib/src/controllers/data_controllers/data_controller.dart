@@ -47,7 +47,7 @@ class DataController extends GetxController {
   //* 0 App initializing function (On startup initialization) //////////////////
   Future<void> initApp() async {
     token.value = await _localData.initData();
-    if (token.isNotEmpty) _tokenValidation(showError: false);
+    _readProf();
     tokenListener();
   }
 
@@ -106,14 +106,15 @@ class DataController extends GetxController {
   Future<List<ProductCardModel>> getProductListByCategory(String id) async => await _errorHandler<List<ProductCardModel>>(function: () async => await ApiServices.listProductByCategory(id)).then((value) => value.value);
   //////////////////////////////////////////////////////////////////////////////
 
+  //* 3 App Function (With token user) /////////////////////////////////////////
   // add to cart
   Future<bool> addToCart({required int productId, required String color, required String size}) async {
     if (token.isEmpty) _loadLoginScreen();
-
     return true;
   }
 
-  void readProf() {
-    _tokenValidation();
+  void _readProf() {
+    if (token.isNotEmpty) _tokenValidation(showError: false);
   }
+  //////////////////////////////////////////////////////////////////////////////
 }

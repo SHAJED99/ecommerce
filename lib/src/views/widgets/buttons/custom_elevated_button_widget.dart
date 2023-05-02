@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatefulWidget {
+  final List<BoxShadow>? boxShadow;
   final bool enable;
   final double? height;
   final double? width;
@@ -18,7 +19,8 @@ class CustomElevatedButton extends StatefulWidget {
   final Widget? onSuccessWidget;
   final Widget? onErrorWidget;
   final bool expanded;
-  final MainAxisAlignment mainAxisAlignment;
+  final MainAxisAlignment verticalAlignment;
+  final AlignmentGeometry? horizontalAlignment;
   final Duration statusShowingDuration;
   final Color? backgroundColor;
   final Color iconColor;
@@ -34,7 +36,8 @@ class CustomElevatedButton extends StatefulWidget {
     this.child,
     this.onRunningWidget,
     this.expanded = false,
-    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.verticalAlignment = MainAxisAlignment.center,
+    this.horizontalAlignment = Alignment.center,
     this.onSuccessWidget,
     this.onErrorWidget,
     this.statusShowingDuration = const Duration(seconds: 2),
@@ -45,6 +48,7 @@ class CustomElevatedButton extends StatefulWidget {
     this.duration = const Duration(milliseconds: 150),
     this.margin,
     this.border,
+    this.boxShadow,
   });
 
   @override
@@ -79,42 +83,37 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
       child: Container(
         margin: widget.margin,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(borderRadius: widget.borderRadius, border: widget.border),
+        decoration: BoxDecoration(borderRadius: widget.borderRadius, border: widget.border, boxShadow: widget.boxShadow),
         child: Material(
           color: widget.backgroundColor ?? Theme.of(context).primaryColor,
           child: InkWell(
-            onTap: () async {
-              if (!widget.enable) return;
-              if (isRunning != ButtonStatus.stable) return;
-              if (mounted) setState(() => isRunning = ButtonStatus.running);
-              if (widget.onTap != null) {
-                result = await widget.onTap!();
-                if (result != null) {
-                  if (result! && mounted) setState(() => isRunning = ButtonStatus.success);
-                  if (!result! && mounted) setState(() => isRunning = ButtonStatus.error);
-                  await Future.delayed(widget.statusShowingDuration);
-                }
-              }
-              if (widget.onDone != null) widget.onDone!(result);
-              if (mounted) setState(() => isRunning = ButtonStatus.stable);
-            },
+            onTap: !widget.enable
+                ? null
+                : () async {
+                    if (!widget.enable) return;
+                    if (isRunning != ButtonStatus.stable) return;
+                    if (mounted) setState(() => isRunning = ButtonStatus.running);
+                    if (widget.onTap != null) {
+                      result = await widget.onTap!();
+                      if (result != null) {
+                        if (result! && mounted) setState(() => isRunning = ButtonStatus.success);
+                        if (!result! && mounted) setState(() => isRunning = ButtonStatus.error);
+                        await Future.delayed(widget.statusShowingDuration);
+                      }
+                    }
+                    if (widget.onDone != null) widget.onDone!(result);
+                    if (mounted) setState(() => isRunning = ButtonStatus.stable);
+                  },
             child: Container(
-              alignment: widget.expanded ? Alignment.center : null,
+              alignment: widget.expanded ? widget.horizontalAlignment : null,
               padding: widget.contentPadding,
               height: widget.height,
               width: widget.width,
               constraints: widget.constraints,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: widget.verticalAlignment,
                 children: [
-                  if (isRunning == ButtonStatus.running)
-                    child(widget.onRunningWidget ?? CircularProgressIndicator(color: widget.iconColor))
-                  else if (isRunning == ButtonStatus.success)
-                    child(widget.onSuccessWidget ?? Icon(Icons.done, color: widget.iconColor))
-                  else if (isRunning == ButtonStatus.error)
-                    child(widget.onErrorWidget ?? Icon(Icons.error, color: widget.iconColor))
-                  else
-                    widget.child ?? Container()
+                  if (isRunning == ButtonStatus.running) child(widget.onRunningWidget ?? CircularProgressIndicator(color: widget.iconColor)) else if (isRunning == ButtonStatus.success) child(widget.onSuccessWidget ?? Icon(Icons.done, color: widget.iconColor)) else if (isRunning == ButtonStatus.error) child(widget.onErrorWidget ?? Icon(Icons.error, color: widget.iconColor)) else widget.child ?? Container(),
                 ],
               ),
             ),

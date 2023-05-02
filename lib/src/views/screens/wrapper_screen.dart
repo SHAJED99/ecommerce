@@ -1,7 +1,7 @@
 import 'package:ecommerce/src/controllers/screen_controllers/wrapper_screen_controller.dart';
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/widgets/custom_bottom_nav_bar.dart';
-import 'package:ecommerce/src/views/widgets/end_drawer.dart';
+import 'package:ecommerce/src/views/widgets/custom_end_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -31,8 +31,7 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
               isActive: dataController.token.isNotEmpty,
               icon: Icons.person_outline_rounded,
             ),
-            NavBarRoundedButton(
-              onTap: () => dataController.readProf(),
+            const NavBarRoundedButton(
               icon: Icons.call_outlined,
             ),
             const NavBarRoundedButton(

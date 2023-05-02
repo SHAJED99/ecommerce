@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.2.1
   pin_code_fields: ^7.4.0
   tuple: ^2.0.1
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
