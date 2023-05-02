@@ -7,7 +7,6 @@ import 'package:ecommerce/src/models/pojo_classes/product_list_slider_model.dart
 import 'package:ecommerce/src/models/pojo_classes/product_model.dart';
 import 'package:ecommerce/src/models/pojo_classes/user_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
@@ -135,8 +134,9 @@ class ApiServices {
     String httpLink = "/ReadProfile";
 
     try {
-      http.Response res = await HttpCall.get(httpLink);
+      http.Response res = await HttpCall.get(httpLink, token: token);
       var metaData = jsonDecode(res.body);
+
       if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) {
         return UserModel.fromJson(metaData['data'][0]);
       }

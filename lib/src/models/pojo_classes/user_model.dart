@@ -1,26 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 class UserModel {
-  final int id;
-  final String firstName;
-  final String lastName;
-  final String mobileNumber;
-  final String city;
-  final String shippingAddress;
-  final String email;
-  final String createdAt;
-  final String updatedAt;
+  int? id;
+  String? firstName;
+  String? lastName;
+  String? mobileNumber;
+  String? city;
+  String? shippingAddress;
+  String? email;
+  String? createdAt;
+  String? updatedAt;
   UserModel({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.mobileNumber,
-    required this.city,
-    required this.shippingAddress,
-    required this.email,
-    required this.createdAt,
-    required this.updatedAt,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.mobileNumber,
+    this.city,
+    this.shippingAddress,
+    this.email,
+    this.createdAt,
+    this.updatedAt,
   });
 
   UserModel copyWith({
@@ -75,30 +72,20 @@ class UserModel {
     );
   }
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  UserModel.fromJson(Map<String, dynamic> map) {
+    id = map['id'];
+    firstName = map['firstName'];
+    lastName = map['lastName'];
+    mobileNumber = map['mobile'];
+    city = map['city'];
+    shippingAddress = map['shippingAddress'];
+    email = map['email'];
+    createdAt = map['created_at'];
+    updatedAt = map['updated_at'];
+  }
 
   @override
   String toString() {
     return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, mobileNumber: $mobileNumber, city: $city, shippingAddress: $shippingAddress, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
-  }
-
-  @override
-  bool operator ==(covariant UserModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.firstName == firstName &&
-        other.lastName == lastName &&
-        other.mobileNumber == mobileNumber &&
-        other.city == city &&
-        other.shippingAddress == shippingAddress &&
-        other.email == email &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^ firstName.hashCode ^ lastName.hashCode ^ mobileNumber.hashCode ^ city.hashCode ^ shippingAddress.hashCode ^ email.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
   }
 }

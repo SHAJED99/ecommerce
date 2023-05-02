@@ -1,8 +1,8 @@
+import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/models/pojo_classes/return_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce/src/controllers/services/api/api_services.dart';
-import 'package:ecommerce/src/controllers/services/handle_error/app_exceptions.dart';
 import 'package:ecommerce/src/controllers/services/handle_error/error_handler.dart';
 import 'package:ecommerce/src/controllers/services/local_data/local_data.dart';
 import 'package:ecommerce/src/models/pojo_classes/category_model.dart';
@@ -14,7 +14,7 @@ import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
 class DataController extends GetxController {
   final LocalData _localData = Get.put(LocalData());
   RxString token = "".obs;
-  Rx<UserModel?> user = null.obs;
+  final Rx<UserModel> user = UserModel().obs;
   RxList<ProductListSliderModel> carouselProductList = RxList<ProductListSliderModel>();
   RxList<CategoryModel> categoryList = RxList<CategoryModel>();
   RxList<ProductCardModel> popularProductList = RxList<ProductCardModel>();
@@ -38,14 +38,16 @@ class DataController extends GetxController {
   // run every time when the token value is changed
   void tokenListener() => token.listen((value) async {
         if (kDebugMode) print("DataController.tokenListener: Token: $value");
-        if (token.isNotEmpty) user.value = await _tokenValidation(showError: false);
         _localData.setToken(value);
+        await Future.delayed(const Duration(seconds: defaultSplashScreenWaitingTime));
+        if (token.isNotEmpty) await _tokenValidation(showError: false);
       });
   //! //////////////////////////////////////////////////////////////////////////
 
   //* 0 App initializing function (On startup initialization) //////////////////
   Future<void> initApp() async {
     token.value = await _localData.initData();
+    if (token.isNotEmpty) _tokenValidation(showError: false);
     tokenListener();
   }
 
@@ -68,17 +70,15 @@ class DataController extends GetxController {
   Future<bool> otpVerification({required String email, required String otp}) async => await _errorHandler(showError: false, function: () async => token.value = await ApiServices.otpVerification(email, otp)).then((value) => value.isValid);
 
   // return user model
-  Future<UserModel> _tokenValidation({bool showError = true}) async => await _errorHandler<UserModel>(showError: showError, function: () async => await ApiServices.userInformation(token.value)).then((value) => value.value);
+  Future<void> _tokenValidation({bool showError = true}) async => await _errorHandler(showError: showError, function: () async => user.value = await ApiServices.userInformation(token.value));
 
   // Logout
-  void logout() {
-    token.value = "";
-    user.value = null;
-  }
+  void logout() => _loadLoginScreen(goLoginPage: false);
 
   // auto logout and shift to the login page when error with 401 statue code
   void _loadLoginScreen({bool goLoginPage = true}) {
-    logout();
+    token.value = "";
+    user.value = UserModel();
     if (goLoginPage) Get.to(() => LoginScreen());
   }
   //////////////////////////////////////////////////////////////////////////////
@@ -111,5 +111,9 @@ class DataController extends GetxController {
     if (token.isEmpty) _loadLoginScreen();
 
     return true;
+  }
+
+  void readProf() {
+    _tokenValidation();
   }
 }
