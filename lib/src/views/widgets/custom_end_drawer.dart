@@ -4,13 +4,16 @@ import 'package:ecommerce/src/controllers/data_controllers/data_controller.dart'
 import 'package:ecommerce/src/models/app_models/app_constants.dart';
 import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
 import 'package:ecommerce/src/views/widgets/buttons/custom_elevated_button_widget.dart';
-import 'package:ecommerce/src/views/widgets/user_details.dart';
+import 'package:ecommerce/src/views/widgets/custom_user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 
 class EndDrawer extends StatelessWidget {
   final DataController dataController = Get.find();
   EndDrawer({super.key});
+
+  final String url = "https://docs.google.com/document/d/1GOM3gb-5Bw5v9gmMLBl3QdONGnAGf-uvmZZYZ949J0A/edit?usp=sharing";
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +77,11 @@ class EndDrawer extends StatelessWidget {
                       backgroundColor: Theme.of(context).primaryColor.withOpacity(1),
                       onTap: () async {
                         try {
-                          await launchUrl(Uri.parse("https://docs.google.com/document/d/1GOM3gb-5Bw5v9gmMLBl3QdONGnAGf-uvmZZYZ949J0A/edit?usp=sharing"));
+                          await launchUrl(Uri.parse(url));
                           return true;
                         } catch (e) {
-                          showSnackBar(title: "About me", message: "Go to this link => https://docs.google.com/document/d/1GOM3gb-5Bw5v9gmMLBl3QdONGnAGf-uvmZZYZ949J0A/edit?usp=sharing");
+                          showSnackBar(title: "About me (Text Copied to clipboard)", message: "Go to this link => $url");
+                          await Clipboard.setData(ClipboardData(text: url));
                           return false;
                         }
                       },

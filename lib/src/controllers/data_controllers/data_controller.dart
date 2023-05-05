@@ -40,14 +40,14 @@ class DataController extends GetxController {
         if (kDebugMode) print("DataController.tokenListener: Token: $value");
         _localData.setToken(value);
         await Future.delayed(const Duration(seconds: defaultSplashScreenWaitingTime));
-        if (token.isNotEmpty) await _tokenValidation(showError: false);
+        await _readProf();
       });
   //! //////////////////////////////////////////////////////////////////////////
 
   //* 0 App initializing function (On startup initialization) //////////////////
   Future<void> initApp() async {
     token.value = await _localData.initData();
-    _readProf();
+    await _readProf();
     tokenListener();
   }
 
@@ -70,7 +70,7 @@ class DataController extends GetxController {
   Future<bool> otpVerification({required String email, required String otp}) async => await _errorHandler(showError: false, function: () async => token.value = await ApiServices.otpVerification(email, otp)).then((value) => value.isValid);
 
   // return user model
-  Future<void> _tokenValidation({bool showError = true}) async => await _errorHandler(showError: showError, function: () async => user.value = await ApiServices.userInformation(token.value));
+  Future<bool> _tokenValidation({bool showError = true}) async => await _errorHandler(showError: showError, function: () async => user.value = await ApiServices.userInformation(token.value)).then((value) => value.isValid);
 
   // Logout
   void logout() => _loadLoginScreen(goLoginPage: false);
@@ -113,7 +113,7 @@ class DataController extends GetxController {
     return true;
   }
 
-  void _readProf() {
+  Future<void> _readProf() async {
     if (token.isNotEmpty) _tokenValidation(showError: false);
   }
   //////////////////////////////////////////////////////////////////////////////
