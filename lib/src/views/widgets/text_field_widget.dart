@@ -38,6 +38,7 @@ class CustomTextFormField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final TextEditingController? textEditingController;
   final TextInputType keyboardType;
+  final String? initialValue;
   const CustomTextFormField({
     Key? key,
     this.height = 48,
@@ -63,7 +64,7 @@ class CustomTextFormField extends StatefulWidget {
     this.cursorColor,
     this.readOnly = false,
     this.autocorrect = true,
-    this.autofocus = true,
+    this.autofocus = false,
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.none,
     this.obscuringCharacter = "•",
@@ -77,6 +78,7 @@ class CustomTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.prefix,
     this.fillColor,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -95,6 +97,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     textEditingController = widget.textEditingController ?? TextEditingController();
     hintText = widget.hintText;
     borderRadius = widget.borderRadius ?? BorderRadius.circular(8);
+    if (widget.initialValue != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        textEditingController.text = widget.initialValue!;
+      });
+    }
   }
 
   @override

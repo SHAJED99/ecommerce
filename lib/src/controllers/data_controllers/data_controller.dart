@@ -14,7 +14,7 @@ import 'package:ecommerce/src/views/screens/user_screens/login_screen.dart';
 class DataController extends GetxController {
   final LocalData _localData = Get.put(LocalData());
   RxString token = "".obs;
-  final Rx<UserModel> user = UserModel().obs;
+  final Rx<UserModel?> user = Rxn();
   RxList<ProductListSliderModel> carouselProductList = RxList<ProductListSliderModel>();
   RxList<CategoryModel> categoryList = RxList<CategoryModel>();
   RxList<ProductCardModel> popularProductList = RxList<ProductCardModel>();
@@ -40,18 +40,19 @@ class DataController extends GetxController {
         if (kDebugMode) print("DataController.tokenListener: Token: $value");
         _localData.setToken(value);
         await Future.delayed(const Duration(seconds: defaultSplashScreenWaitingTime));
-        await _readProf();
+        await readProf();
       });
   //! //////////////////////////////////////////////////////////////////////////
 
   //* 0 App initializing function (On startup initialization) //////////////////
   Future<void> initApp() async {
     token.value = await _localData.initData();
-    await _readProf();
+    await readProf();
     tokenListener();
   }
 
   Future<void> loadData() async {
+    print(user);
     await _errorHandler(function: () async {
       await _getHomeCarouselSlider();
       await _getCategoryList();
@@ -78,7 +79,7 @@ class DataController extends GetxController {
   // auto logout and shift to the login page when error with 401 statue code
   void _loadLoginScreen({bool goLoginPage = true}) {
     token.value = "";
-    user.value = UserModel();
+    user.value = null;
     if (goLoginPage) Get.to(() => LoginScreen());
   }
   //////////////////////////////////////////////////////////////////////////////
@@ -113,7 +114,7 @@ class DataController extends GetxController {
     return true;
   }
 
-  Future<void> _readProf() async {
+  Future<void> readProf() async {
     if (token.isNotEmpty) _tokenValidation(showError: false);
   }
   //////////////////////////////////////////////////////////////////////////////

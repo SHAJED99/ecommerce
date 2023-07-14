@@ -22,7 +22,7 @@ class MainScreenWrapperController extends GetxController {
     CustomPage(name: "Wish", iconData: Icons.card_giftcard, page: WishScreen()),
   ];
 
-  changeIndex({required PageEnum index, PreferredSizeWidget? topNavBar, Widget? page}) {
+  void changeIndex({required PageEnum index, PreferredSizeWidget? topNavBar, Widget? page}) {
     // Add previous page list
     _previousPages.add(currentPage.value);
 
@@ -34,12 +34,15 @@ class MainScreenWrapperController extends GetxController {
     // Set current page
     currentPage.value = ScreenState(pageIndex: index, topBarIndex: page == null ? CustomTopAppBar() : topNavBar ?? currentPage.value.topBarIndex, page: page ?? pages[index.index].page);
 
-    if (kDebugMode) print(_previousPages.length);
+    if (kDebugMode) print("MainScreenWrapperController.goBackPage(): Current Page: ${currentPage.value.pageIndex},  Previous Page Length: ${_previousPages.length}");
   }
 
   bool goBackPage() {
-    if (kDebugMode) print(currentPage.value.pageIndex);
-    if (kDebugMode) print(_previousPages.length);
+    // Close endDrawer
+    if (scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
+      scaffoldKey.currentState?.closeEndDrawer();
+      return false;
+    }
 
     // Exit app
     if (currentPage.value.pageIndex == PageEnum.home && _previousPages.isEmpty) {

@@ -129,7 +129,7 @@ class ApiServices {
     }
   }
 
-  static Future<UserModel> userInformation(String token) async {
+  static Future<UserModel?> userInformation(String token) async {
     if (kDebugMode) print("ApiServices: Requesting ApiServices.userInformation");
     String httpLink = "/ReadProfile";
     try {
@@ -137,7 +137,10 @@ class ApiServices {
       var metaData = jsonDecode(res.body);
 
       if (res.statusCode == 200 && metaData['msg'] == "success" && metaData['data'] != null) {
+        if (metaData['data'].isEmpty) return UserModel();
         return UserModel.fromJson(metaData['data'][0]);
+        // return UserModel.fromJson({});
+        // return null;
       }
       throw res.statusCode;
     } catch (e) {

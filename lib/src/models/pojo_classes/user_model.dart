@@ -84,8 +84,14 @@ class UserModel {
     updatedAt = map['updated_at'];
   }
 
-  @override
-  String toString() {
-    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, mobileNumber: $mobileNumber, city: $city, shippingAddress: $shippingAddress, email: $email, createdAt: $createdAt, updatedAt: $updatedAt)';
+  // true if profile complete
+  bool isValid() {
+    if (firstName == null) return false;
+    if (lastName == null) return false;
+    if (mobileNumber == null) return false;
+    if (city == null) return false;
+    if (shippingAddress == null) return false;
+    if (email == null) return false;
+    return true;
   }
 }

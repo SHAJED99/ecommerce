@@ -7,16 +7,19 @@ class CustomCard extends StatelessWidget {
     this.child,
     this.color,
     this.padding = const EdgeInsets.symmetric(horizontal: defaultPadding, vertical: defaultPadding / 2),
+    this.margin,
   });
   final Widget? child;
   final Color? color;
   final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       clipBehavior: Clip.antiAlias,
       padding: padding,
+      margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(defaultPadding / 2),
         boxShadow: defaultBoxShadowDown,

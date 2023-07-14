@@ -30,9 +30,16 @@ class CustomTopAppBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => mainScreenWrapperController.scaffoldKey.currentState?.openEndDrawer(),
               isActive: dataController.token.isNotEmpty,
               icon: Icons.person_outline_rounded,
+              showBubble: !(dataController.user.value?.isValid() ?? false)
+                  ? const Icon(
+                      Icons.error,
+                      color: defaultErrorColor,
+                    )
+                  : null,
             ),
-            const NavBarRoundedButton(
+            NavBarRoundedButton(
               icon: Icons.call_outlined,
+              onTap: () {},
             ),
             const NavBarRoundedButton(
               icon: Icons.edit_notifications_outlined,
@@ -48,11 +55,14 @@ class NavBarRoundedButton extends StatelessWidget {
   final void Function()? onTap;
   final IconData? icon;
   final bool isActive;
+  final Widget? showBubble;
+
   const NavBarRoundedButton({
     super.key,
     this.onTap,
     this.icon,
     this.isActive = false,
+    this.showBubble,
   });
 
   @override
@@ -61,19 +71,47 @@ class NavBarRoundedButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: defaultPadding / 2),
       child: AspectRatio(
         aspectRatio: 1,
-        child: ClipOval(
-          child: Material(
-            color: isActive ? Theme.of(context).primaryColor.withOpacity(0.2) : defaultGreyColor.withOpacity(0.2),
-            child: InkWell(
-              onTap: onTap,
-              child: FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(defaultPadding / 1.5),
-                  child: Icon(icon, color: defaultBlackColor),
+        child: Stack(
+          children: [
+            ClipOval(
+              child: Container(
+                color: isActive ? Theme.of(context).primaryColor.withOpacity(0.2) : defaultGreyColor.withOpacity(0.2),
+                child: FittedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.all(defaultPadding / 1.5),
+                    child: Icon(icon, color: defaultBlackColor),
+                  ),
                 ),
               ),
             ),
-          ),
+            if (showBubble != null)
+              Positioned(
+                right: 0,
+                child: Container(
+                  height: defaultPadding,
+                  width: defaultPadding,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: FittedBox(child: Center(child: showBubble)),
+                ),
+              ),
+            Positioned.fill(
+              child: Material(
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(100),
+                  bottomLeft: const Radius.circular(100),
+                  topRight: Radius.circular(showBubble == null ? 100 : 32),
+                  bottomRight: const Radius.circular(100),
+                ),
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onTap,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
